@@ -1,0 +1,27 @@
+{
+  "name": "@wheelfor/mcp",
+  "version": "1.0.0",
+  "description": "MCP server for wheelfor.com — create, spin, and manage decision wheels",
+  "type": "module",
+  "bin": {
+    "wheelfor-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "files": ["dist"],
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/wheelfor/mcp"
+  },
+  "homepage": "https://wheelfor.com"
+}
