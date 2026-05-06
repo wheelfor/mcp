@@ -1,6 +1,6 @@
 {
   "name": "@wheelfor/mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "MCP server for wheelfor.com — create, spin, and manage decision wheels",
   "type": "module",
   "bin": {
