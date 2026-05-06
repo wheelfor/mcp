@@ -1,0 +1,13 @@
+name: wheelfor
+displayName: wheelfor.com
+description: Create, spin, and manage shareable decision wheels. No account required.
+homepage: https://wheelfor.com
+license: MIT
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties: {}
+  commandFunction: |-
+    () => ({ command: "npx", args: ["-y", "@wheelfor/mcp"] })
