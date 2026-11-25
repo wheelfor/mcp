@@ -6,6 +6,7 @@ import {
 } from "@modelcontextprotocol/sdk/types.js";
 
 const API = "https://wheelfor.com/api";
+const VERSION = "1.0.2";
 
 const THEMES = [
   "Fresh Air",
@@ -19,9 +20,23 @@ const THEMES = [
 ] as const;
 
 const server = new Server(
-  { name: "wheelfor", version: "1.0.0" },
+  { name: "wheelfor", version: VERSION },
   { capabilities: { tools: {} } }
 );
+
+function headerSafe(value: string): string {
+  return value.replace(/[^\x20-\x7e]/g, "").slice(0, 100);
+}
+
+function apiHeaders(): Record<string, string> {
+  const client = server.getClientVersion();
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "User-Agent": `wheelfor-mcp/${VERSION}`,
+  };
+  if (client) headers["X-MCP-Client"] = headerSafe(`${client.name}/${client.version}`);
+  return headers;
+}
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
@@ -125,7 +140,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     case "create_wheel": {
       const res = await fetch(`${API}/wheels`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: apiHeaders(),
         body: JSON.stringify({
           name: args.name,
           choices: (args.choices as string[]).join("\n"),
@@ -152,7 +167,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     case "spin_wheel": {
       const raw = args.slug as string;
       const slug = raw.replace(/^https?:\/\/[^/]+\/wheel\//, "").replace(/\/.*$/, "");
-      const res = await fetch(`${API}/wheels/${slug}/spin`);
+      const res = await fetch(`${API}/wheels/${slug}/spin`, { headers: apiHeaders() });
       const data = (await res.json()) as { result: string; url: string };
       return {
         content: [
@@ -180,7 +195,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       const res = await fetch(`${API}/wheels`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: apiHeaders(),
         body: JSON.stringify(body),
       });
       const data = (await res.json()) as { success: boolean; slug: string; error?: string };
@@ -202,7 +217,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
       const res = await fetch(`${API}/wheels`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: apiHeaders(),
         body: JSON.stringify({
           name: topic,
           choices: options.join("\n"),
